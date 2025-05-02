@@ -22,4 +22,12 @@ spec:
         imagePullPolicy: Never
         name: bank-transfer-service
         resources: {}
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
 status: {}
