@@ -125,7 +125,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>Transfer-API</finalName>
+		<finalName>bank-transfer-service</finalName>
 	</build>
 
 </project>

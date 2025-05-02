@@ -1,12 +1,10 @@
 package com.Transfer.API.controller;
 
 
-import com.Transfer.API.data.SummaryResponse;
 import com.Transfer.API.data.TransferRequest;
 import com.Transfer.API.enums.TransactionStatus;
 import com.Transfer.API.models.Transaction;
 import com.Transfer.API.service.TransactionService;
-import com.Transfer.API.service.impl.TransactionServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

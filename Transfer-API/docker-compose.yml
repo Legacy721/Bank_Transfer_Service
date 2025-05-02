@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: my-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypass
+    ports:
+      - "3306:3306"
+    networks:
+      - springnet
+
+  app:
+    image: bank-transfer-service
+    depends_on:
+      - mysql
+    environment:
+      DATABASE_URL: jdbc:mysql://mysql:3306/mydb
+      DATABASE_USERNAME: myuser
+      DATABASE_PASSWORD: mypass
+    ports:
+      - "8290:8290"
+    networks:
+      - springnet
+
+networks:
+  springnet:

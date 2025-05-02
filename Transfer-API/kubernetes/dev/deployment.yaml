@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: gs-transfer-service-k8s
+  name: gs-transfer-service-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gs-transfer-service-k8s
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: gs-transfer-service-k8s
+    spec:
+      containers:
+      - image: bank-transfer-service:latest
+        name: bank-transfer-service
+        resources: {}
+status: {}

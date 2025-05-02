@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: gs-transfer-service-k8s
+  name: gs-transfer-service-k8s
+spec:
+  ports:
+  - name: 80-8080
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: gs-transfer-service-k8s
+  type: ClusterIP
+status:
+  loadBalancer: {}
