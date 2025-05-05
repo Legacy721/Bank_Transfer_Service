@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -43,10 +44,12 @@ public class TransactionController {
             @RequestParam(required = false) TransactionStatus status,
             @RequestParam(required = false) String accountNumber,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(defaultValue = "1") int offset,
+            @RequestParam(defaultValue = "10") int limit) {
 
         logger.info("Get Transactions Controller");
-        List<Transaction> transactions = transactionService.getTransactions(status, accountNumber, startDate, endDate);
+        Page<Transaction> transactions = transactionService.getTransactions(status, accountNumber, startDate, endDate, offset, limit);
         return ResponseEntity.ok(transactions);
     }
 

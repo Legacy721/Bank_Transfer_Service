@@ -17,6 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,15 +126,19 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Transaction> getTransactions(
+    public Page<Transaction> getTransactions(
             TransactionStatus status,
             String accountNumber,
             LocalDateTime startDate,
-            LocalDateTime endDate) {
+            LocalDateTime endDate,
+            int offset,
+            int limit) {
         logger.info("request/get transaction list...");
 
+        Pageable pageable = PageRequest.of(offset - 1, limit, Sort.by(Sort.Direction.DESC, "id"));
+
        try{
-           return transactionRepository.findWithFilters(status, accountNumber, startDate, endDate);
+           return transactionRepository.findWithFilters(status, accountNumber, startDate, endDate, pageable);
 
        }catch (Exception e){
            logger.error("Exception:" + e.getMessage());

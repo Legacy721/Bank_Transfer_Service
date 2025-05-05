@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -94,14 +96,17 @@ class TransactionControllerTest {
     void getTransactions_WithAllParameters_ReturnsFilteredTransactions() throws Exception {
 
         //Arrange
-        List<Transaction> transactions = Arrays.asList(
+        List<Transaction> transactionList = Arrays.asList(
                 new Transaction(), new Transaction()
         );
+        Page<Transaction> transactions = new PageImpl<>(transactionList);
         LocalDateTime startDate = LocalDateTime.of(2023, 1, 2, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2023, 1, 2, 23, 59);
+        int offset = 1;
+        int limit = 10;
 
         // Act
-        when(transactionService.getTransactions(eq(TransactionStatus.SUCCESSFUL), eq("1234567890"), eq(startDate), eq(endDate)))
+        when(transactionService.getTransactions(eq(TransactionStatus.SUCCESSFUL), eq("1234567890"), eq(startDate), eq(endDate), eq(offset), eq(limit)))
                 .thenReturn(transactions);
 
         // Assert
@@ -111,21 +116,24 @@ class TransactionControllerTest {
                 .param("startDate", "2023-01-02T00:00:00")
                 .param("endDate", "2023-01-02T23:59:00"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(2)));
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content", org.hamcrest.Matchers.hasSize(2)));
     }
 
 
     @Test
     void getTransactions_NoParameters_ReturnsAllTransactions() throws Exception {
-        List<Transaction> transactions = Arrays.asList(new Transaction(), new Transaction());
+        List<Transaction> transactionList = Arrays.asList(new Transaction(), new Transaction());
+        Page<Transaction> transactions = new PageImpl<>(transactionList);
 
-        when(transactionService.getTransactions(isNull(), isNull(), isNull(), isNull()))
+        int offset = 1;
+        int limit = 10;
+        when(transactionService.getTransactions(isNull(), isNull(), isNull(), isNull(), eq(offset),eq(limit) ))
                 .thenReturn(transactions);
 
         mockMvc.perform(get("/api/v1/transactions"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(2)));
+                .andExpect(jsonPath("$.content", org.hamcrest.Matchers.hasSize(2)));
     }
 
 

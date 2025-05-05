@@ -2,6 +2,8 @@ package com.Transfer.API.repository;
 
 import com.Transfer.API.enums.TransactionStatus;
 import com.Transfer.API.models.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,11 +22,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "(:accountNumber IS NULL OR t.sourceAccountNumber = :accountNumber OR t.destinationAccountNumber = :accountNumber) AND " +
             "(:startDate IS NULL OR t.dateCreated >= :startDate) AND " +
             "(:endDate IS NULL OR t.dateCreated <= :endDate)")
-    List<Transaction> findWithFilters(
+    Page<Transaction> findWithFilters(
             @Param("status") TransactionStatus status,
             @Param("accountNumber") String accountNumber,
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
 
     List<Transaction> findByDateCreatedBetweenAndStatus(
             LocalDateTime startOfDay,
